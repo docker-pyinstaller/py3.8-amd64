@@ -30,6 +30,7 @@ RUN \
         uuid-dev \
         #upx
         upx \
+        tk-dev \
     # required because openSSL on Ubuntu 12.04 and 14.04 run out of support versions of OpenSSL
     && mkdir openssl \
     && cd openssl \
