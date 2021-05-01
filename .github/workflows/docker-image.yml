@@ -12,6 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         
+      - name: Extract tag name
+        id: tag
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            return context.payload.ref.replace(/\/refs\/tags\//, '');
+        
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         
@@ -30,7 +38,7 @@ jobs:
           context: .
           push: true
           file: Dockerfile
-          tags: mayankfawkes/pyinstaller-py3.8:${{ github.ref }}-amd64
+          tags: mayankfawkes/pyinstaller-py3.8:${{ steps.tag.outputs.result }}-amd64
       
       - name: Create Release
         uses: actions/create-release@v1
