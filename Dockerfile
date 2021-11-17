@@ -42,6 +42,7 @@ RUN \
     && apt-get install -y --no-install-recommends \
         python3 \
         python3-dev \
+        python3-tk \
         python3-virtualenv \
         python3-pip \
     && pip install --upgrade pip \
