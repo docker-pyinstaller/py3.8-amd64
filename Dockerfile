@@ -1,7 +1,10 @@
 FROM ubuntu:20.04
-SHELL ["/bin/bash", "-i", "-c"]
 
 ARG DEBIAN_FRONTEND=noninteractive
+
+# set compilation environment for python
+ENV PYTHON_CONFIGURE_OPTS=--enable-shared
+ENV CPPFLAGS=-O2
 
 ARG PYTHON_VERSION=3.8.9
 ARG PYINSTALLER_VERSION=3.6
@@ -27,6 +30,8 @@ RUN \
         libssl-dev \
         libffi-dev \
         #upx
+        libgdbm6 \
+        uuid-dev \
         upx \
         tk-dev \
         file \
@@ -37,18 +42,15 @@ RUN \
     && source ~/.bashrc \
     && curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash \
     && echo 'eval "$(pyenv init -)"' >> ~/.bashrc \
+    && echo 'eval "$(pyenv init --path)"' >> ~/.bashrc \
     && source ~/.bashrc \
     # install python
-    && apt-get install -y --no-install-recommends \
-        python3 \
-        python3-dev \
-        python3-tk \
-        python3-virtualenv \
-        python3-pip \
+    && pyenv install $PYTHON_VERSION \
+    && pyenv global $PYTHON_VERSION \
     && pip install --upgrade pip \
     # install pyinstaller
     && pip install pyinstaller==$PYINSTALLER_VERSION \
-    && mkdir /src/
+    && mkdir /src/ \
 
 VOLUME /src/
 WORKDIR /src/
